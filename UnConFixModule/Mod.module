@@ -1,0 +1,12 @@
+{
+        "IsEnabled": true,
+        "Name": "UnConFix",
+        "Version": "2.1.0.3",
+        "Assemblies":
+        [
+                {
+                        "Path": "/UnConFix.dll",
+                        "Role": "Both_Optional"
+                }
+        ]
+}
