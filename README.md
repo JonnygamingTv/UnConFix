@@ -7,3 +7,4 @@ Mainly useful when using child_process in e.g nodejs and
 ```js
 childprocess.stdin.write("data\n")
 ```
+
