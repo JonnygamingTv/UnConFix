@@ -8,3 +8,4 @@ Mainly useful when using child_process in e.g nodejs and
 childprocess.stdin.write("data\n")
 ```
 
+Nelson did help by telling what should be used! (CommandWindow, etc)
