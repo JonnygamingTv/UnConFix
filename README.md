@@ -8,7 +8,7 @@ Mainly useful when using child_process in e.g nodejs: https://nodejs.org/api/chi
 ```js
 let cp = require('child_process');
 
-let childprocess = cp.spawn("ServerHelper.sh", {cwd:"/home/unturned/"});
+let childprocess = cp.spawn("./ServerHelper.sh +secureserver/server", {cwd:"/home/unturned/"});
 
 setInterval(function(){
   childprocess.stdin.write("command\n")
