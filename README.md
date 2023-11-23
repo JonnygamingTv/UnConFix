@@ -13,10 +13,10 @@ let childprocess = cp.spawn("./ServerHelper.sh +secureserver/server", {cwd:"/hom
 setInterval(function(){
   childprocess.stdin.write("command\n")
 }, 60000);
-```
+``` (example Node.JS code)
 
 
-Nelson did help by telling what should be used! (CommandWindow, etc) when I asked him by email
+Nelson did help by telling what should be used (CommandWindow, etc) when I asked him by email! :)
 
 
 
