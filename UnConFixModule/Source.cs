@@ -26,6 +26,7 @@ remove
 }*/
         //CommandWindow cmdWin;
         List<String> cmdQ = new List<String>();
+        bool act = true;
         void IModuleNexus.initialize()
         {
             Console.WriteLine("Custom JH Module initiating");
@@ -33,13 +34,10 @@ remove
             //inputCommitted += Test;
             Task.Run(() => {
                 Console.WriteLine("Custom JH CMD listener activated.");
-                String cmd;bool act = true;
+                String cmd;
                 while ((cmd = Console.ReadLine()) != "" && act)
                 {
-                    if (cmd=="shutdown")
-                    {
-                        act = false;
-                    }else if (cmd.Substring(0,3)=="/JH")
+                    if (cmd.Substring(0,3)=="/JH")
                     {
                         if (!Commander.execute(default(CSteamID), cmd.Substring(4))) { CommandWindow.LogErrorFormat("Unable to match \"" + cmd.Substring(4) + "\" with any built-in commands"); };
                     }
@@ -77,12 +75,14 @@ remove
         {
             Dedicator.commandWindow.removeIOHandler(this);
             Console.WriteLine("Custom JH Module unloaded");
+            act = false;
         }
 
         void ICommandInputOutput.shutdown(CommandWindow commandWindow)
         {
             Dedicator.commandWindow.removeIOHandler(this);
             Console.WriteLine("[2] Custom JH Module unloaded");
+            act = false;
         }
 
         void ICommandInputOutput.update()
