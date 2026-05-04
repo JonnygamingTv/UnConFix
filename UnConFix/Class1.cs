@@ -14,32 +14,35 @@ namespace UnConFix
         int sleepTPS = 1;
         public void shutdown()
         {
-            SDG.Unturned.Provider.onClientConnected -= CheckCount;
-            SDG.Unturned.Provider.onClientDisconnected -= CheckCount;
+            SDG.Unturned.Provider.onServerConnected -= CheckCountJoin;
+            SDG.Unturned.Provider.onServerDisconnected -= CheckCountLeave;
             Console.WriteLine("JH sleeper Module uninitialized.");
         }
 
         void IModuleNexus.initialize()
         {
             targetTPS = Application.targetFrameRate;
-            SDG.Unturned.Provider.onClientConnected += CheckCount; // ()
-            SDG.Unturned.Provider.onClientDisconnected += CheckCount; // ()
+            SDG.Unturned.Provider.onServerConnected += CheckCountJoin; // ()
+            SDG.Unturned.Provider.onServerDisconnected += CheckCountLeave; // ()
             Console.WriteLine("Custom JH sleeper Module for putting inactive server to 'sleep' initialized!");
         }
-
-        private void CheckCount()
+        private void CheckCountJoin(CSteamID r) // when a player joins, so never zero players at this point
         {
-            if (SDG.Unturned.Provider.clients.Count == 0) // 0 online players
+            if (Application.targetFrameRate == sleepTPS) // only modify if server was previously put to sleep
+            {
+                Application.targetFrameRate = targetTPS;
+            }
+        }
+        private void CheckCountLeave(CSteamID r)
+        {
+            if (SDG.Unturned.Provider.clients.Count == 1) // is 1, removed from list after this event has passed
             {
                 if (Application.targetFrameRate != sleepTPS) // only modify if needed
                 {
                     targetTPS = Application.targetFrameRate; // keep the normal desired TPS for the future when changing back (RocketMod allows configured amount, while vanilla is set to 50.)
                     Application.targetFrameRate = sleepTPS;
+                    Console.WriteLine("[JHSleeperModule] Putting server to sleep..");
                 }
-            }
-            else if (Application.targetFrameRate == sleepTPS) // only modify if server was previously put to sleep
-            {
-                Application.targetFrameRate = targetTPS;
             }
         }
     }
