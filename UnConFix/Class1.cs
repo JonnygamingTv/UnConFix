@@ -2,14 +2,13 @@
 using SDG.Unturned;
 using Steamworks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
 namespace UnConFix
 {
-    public class DynamicTPS : MonoBehaviour, IModuleNexus
+    public class DynamicTPS : IModuleNexus
     {
         int targetTPS = 10;
         int sleepTPS = 1;
