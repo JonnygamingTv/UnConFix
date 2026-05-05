@@ -25,7 +25,6 @@ namespace UnConFix
         }
         public void shutdown()
         {
-            SDG.Unturned.Level.onLevelLoaded -= OnLoad;
             SDG.Unturned.Provider.onServerConnected -= CheckCountJoin;
             SDG.Unturned.Provider.onServerDisconnected -= CheckCountLeave;
             Console.WriteLine("JH sleeper Module uninitialized.");
@@ -34,13 +33,12 @@ namespace UnConFix
         void IModuleNexus.initialize()
         {
             targetTPS = Application.targetFrameRate;
-            SDG.Unturned.Level.onLevelLoaded += OnLoad;
             SDG.Unturned.Provider.onServerConnected += CheckCountJoin; // ()
             SDG.Unturned.Provider.onServerDisconnected += CheckCountLeave; // ()
             Console.WriteLine("Custom JH sleeper Module for putting inactive server to 'sleep' initialized!");
         }
 
-        private void OnLoad(int level)
+        private void OnLevelLoad(int level)
         {
             if (Provider.getServerWorkshopFileIDs().Count == 0)
             {
