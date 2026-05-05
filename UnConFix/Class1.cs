@@ -11,7 +11,18 @@ namespace UnConFix
     public class DynamicTPS : IModuleNexus
     {
         int targetTPS = 10;
-        int sleepTPS = 1;
+        static int sleepTPS = 1;
+        public static int Sleep_TPS
+        { 
+            get => sleepTPS; 
+            set {
+                if (Application.targetFrameRate == sleepTPS) // if server is sleeping, update the current framerate
+                {
+                    Application.targetFrameRate = value;
+                }
+                sleepTPS = value;
+            }
+        }
         public void shutdown()
         {
             SDG.Unturned.Provider.onServerConnected -= CheckCountJoin;
@@ -76,9 +87,18 @@ remove
                 string cmd;
                 while ((cmd = Console.ReadLine()) != "" && act)
                 {
-                    if (cmd.Substring(0,3)=="/JH")
+                    switch (cmd.Substring(0, 3))
                     {
-                        if (!Commander.execute(default(CSteamID), cmd.Substring(4))) { CommandWindow.LogErrorFormat("Unable to match \"" + cmd.Substring(4) + "\" with any built-in commands"); };
+                        case "/JH":
+                            {
+                                if (!Commander.execute(default(CSteamID), cmd.Substring(4))) { CommandWindow.LogErrorFormat("Unable to match \"" + cmd.Substring(4) + "\" with any built-in commands"); }
+                                break;
+                            }
+                        case "/JT":
+                            {
+                                if(int.TryParse(cmd.Substring(4), out int newtps)) DynamicTPS.Sleep_TPS = newtps;
+                                break;
+                            }
                     }
                     //Console.WriteLine("[COMMAND] >> " + cmd);
                     //execute(CSteamID.Nil, cmd);
