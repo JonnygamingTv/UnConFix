@@ -25,6 +25,7 @@ namespace UnConFix
         }
         public void shutdown()
         {
+            SDG.Unturned.Level.onLevelLoaded -= OnLoad;
             SDG.Unturned.Provider.onServerConnected -= CheckCountJoin;
             SDG.Unturned.Provider.onServerDisconnected -= CheckCountLeave;
             Console.WriteLine("JH sleeper Module uninitialized.");
@@ -33,14 +34,29 @@ namespace UnConFix
         void IModuleNexus.initialize()
         {
             targetTPS = Application.targetFrameRate;
-            if(Provider.getServerWorkshopFileIDs().Count == 0)
-            {
-                Sleep_TPS = 1;
-            }
+            SDG.Unturned.Level.onLevelLoaded += OnLoad;
             SDG.Unturned.Provider.onServerConnected += CheckCountJoin; // ()
             SDG.Unturned.Provider.onServerDisconnected += CheckCountLeave; // ()
             Console.WriteLine("Custom JH sleeper Module for putting inactive server to 'sleep' initialized!");
         }
+
+        private void OnLoad(int level)
+        {
+            if (Provider.getServerWorkshopFileIDs().Count == 0)
+            {
+                Sleep_TPS = 1;
+            }
+            if (SDG.Unturned.Provider.clients.Count == 0)
+            {
+                if (Application.targetFrameRate != sleepTPS) // only modify if needed
+                {
+                    targetTPS = Application.targetFrameRate; // keep the normal desired TPS for the future when changing back (RocketMod allows configured amount, while vanilla is set to 50.)
+                    Application.targetFrameRate = sleepTPS;
+                    Console.WriteLine("[JHSleeperModule] Putting server to sleep.. Use /JT [tps] to modify.");
+                }
+            }
+        }
+
         private void CheckCountJoin(CSteamID r) // when a player joins, so never zero players at this point
         {
             if (Application.targetFrameRate == sleepTPS) // only modify if server was previously put to sleep
