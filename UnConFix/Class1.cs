@@ -11,7 +11,7 @@ namespace UnConFix
     public class DynamicTPS : IModuleNexus
     {
         int targetTPS = 10;
-        static int sleepTPS = 1;
+        static int sleepTPS = 2;
         public static int Sleep_TPS
         { 
             get => sleepTPS; 
