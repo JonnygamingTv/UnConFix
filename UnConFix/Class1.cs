@@ -10,8 +10,8 @@ namespace UnConFix
 {
     public class DynamicTPS : IModuleNexus
     {
-        int targetTPS = 10;
-        static int sleepTPS = 2;
+        int targetTPS = 20;
+        static int sleepTPS = 10;
         public static int Sleep_TPS
         { 
             get => sleepTPS; 
@@ -33,6 +33,10 @@ namespace UnConFix
         void IModuleNexus.initialize()
         {
             targetTPS = Application.targetFrameRate;
+            if(Provider.getServerWorkshopFileIDs().Count == 0)
+            {
+                Sleep_TPS = 1;
+            }
             SDG.Unturned.Provider.onServerConnected += CheckCountJoin; // ()
             SDG.Unturned.Provider.onServerDisconnected += CheckCountLeave; // ()
             Console.WriteLine("Custom JH sleeper Module for putting inactive server to 'sleep' initialized!");
