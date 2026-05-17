@@ -22,10 +22,11 @@ namespace UnConFix
                     Application.targetFrameRate = value;
                 }
                 sleepTPS = value;
-                File.WriteAllText(sleepTPS_Save, sleepTPS.ToString());
+                File.WriteAllText(SleepTPS_SaveFile, sleepTPS.ToString());
             }
         }
         const string sleepTPS_Save = "sleepTPS.txt";
+        static string SleepTPS_SaveFile = sleepTPS_Save;
         public void shutdown()
         {
             SDG.Unturned.Provider.onServerConnected -= CheckCountJoin;
@@ -40,9 +41,16 @@ namespace UnConFix
             SDG.Unturned.Provider.onServerDisconnected += CheckCountLeave; // ()
             try
             {
-                if (File.Exists(sleepTPS_Save))
+                var workingDirectory = ReadWrite.PATH;
+                var serverId = Dedicator.serverID;
+                var serverDirectory = Path.Combine(workingDirectory, "Servers", serverId);
+
+                SleepTPS_SaveFile = Path.Combine(serverDirectory, sleepTPS_Save);
+
+                Console.WriteLine(sleepTPS_Save + ": " + Path.GetFullPath(SleepTPS_SaveFile));
+                if (File.Exists(SleepTPS_SaveFile))
                 {
-                    string txt = File.ReadAllText(sleepTPS_Save);
+                    string txt = File.ReadAllText(SleepTPS_SaveFile);
                     int.TryParse(txt, out sleepTPS);
                 }
             }
