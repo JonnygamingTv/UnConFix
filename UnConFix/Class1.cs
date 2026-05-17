@@ -3,6 +3,7 @@ using SDG.Unturned;
 using Steamworks;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -21,8 +22,10 @@ namespace UnConFix
                     Application.targetFrameRate = value;
                 }
                 sleepTPS = value;
+                File.WriteAllText(sleepTPS_Save, sleepTPS.ToString());
             }
         }
+        const string sleepTPS_Save = "sleepTPS.txt";
         public void shutdown()
         {
             SDG.Unturned.Provider.onServerConnected -= CheckCountJoin;
@@ -35,6 +38,15 @@ namespace UnConFix
             targetTPS = Application.targetFrameRate;
             SDG.Unturned.Provider.onServerConnected += CheckCountJoin; // ()
             SDG.Unturned.Provider.onServerDisconnected += CheckCountLeave; // ()
+            try
+            {
+                if (File.Exists(sleepTPS_Save))
+                {
+                    string txt = File.ReadAllText(sleepTPS_Save);
+                    int.TryParse(txt, out sleepTPS);
+                }
+            }
+            catch (Exception) { }
             Console.WriteLine("Custom JH sleeper Module for putting inactive server to 'sleep' initialized!");
         }
 
@@ -70,7 +82,7 @@ namespace UnConFix
                 {
                     targetTPS = Application.targetFrameRate; // keep the normal desired TPS for the future when changing back (RocketMod allows configured amount, while vanilla is set to 50.)
                     Application.targetFrameRate = sleepTPS;
-                    Console.WriteLine("[JHSleeperModule] Putting server to sleep..");
+                    Console.WriteLine("[JHSleeperModule] Putting server to sleep.. Use /JT [tps] to modify if you are experiencing issues.");
                 }
             }
         }
